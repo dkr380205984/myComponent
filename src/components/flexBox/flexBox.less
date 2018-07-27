@@ -1,0 +1,54 @@
+.flex_container{
+  position: relative;
+  display: block;
+  .main{
+    margin:auto;
+    .line{
+      display: flex;
+      .box{
+        margin:5px;
+        position: relative;
+        transition: 0.15s linear;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center center;
+        &:hover{
+          transform: scale(1.05);
+        }
+        .leftBottom{
+          position: absolute;
+          left: 10px;
+          bottom:11px;
+        }
+        .rightBottom{
+          position: absolute;
+          right: 10px;
+          bottom:11px;
+        }
+        .leftTop{
+          position: absolute;
+          left: 10px;
+          top:11px;
+        }
+        .rightTop{
+          position: absolute;
+          right: 10px;
+          top:11px;
+        }
+        .center{
+          position: absolute;
+          left: 50%;
+          top:50%;
+          transform: translate(-50%,-50%);
+        }
+      }
+      
+    }
+  }
+  
+}
+.clearfix:after{
+  content:'';
+  display:block;
+  clear:both;
+}

@@ -1,0 +1,52 @@
+.enjoy_carousel_container{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(15deg);
+  .enjoy_carousel_once_6{
+    position: absolute;
+    height: 100%;
+    top:0;
+    left: 0;
+    box-sizing: border-box;
+    transition: 1s linear;
+    border:5px solid white
+  }
+  .once_6_first{
+    width: 33.33%;
+    background: red;
+    transform: translate3d(0,0,0) rotateY(-60deg);
+    transform-origin: right center;
+  }
+  .once_6_second{
+    width: 33.33%;
+    background: green;
+    transform: translate3d(100%,0,0)
+  }
+  .once_6_third{
+    width: 33.33%;
+    background: blue;
+    transform: translate3d(200%,0,0) rotateY(60deg);
+    transform-origin: left center;
+  }
+  .once_6_fourth{
+    width: 33.33%;
+    background: rebeccapurple;
+    transform: translate3d(250%,0,-333px) rotateY(120deg);
+    transform-origin: left center;
+  }
+  .once_6_fifth{
+    width: 33.33%;
+    background: blueviolet;
+    transform: translate3d(100%,0,-666px)
+  }
+  .once_6_sixth{
+    width: 33.33%;
+    background: greenyellow;
+    transform: translate3d(-50%,0,-333px) rotateY(-120deg);
+    transform-origin: right center;
+  }
+}

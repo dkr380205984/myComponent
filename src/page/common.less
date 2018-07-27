@@ -1,0 +1,151 @@
+.container{
+  width: 1200px;
+  margin:auto;
+  padding-bottom:60px;
+  .logo{
+    width: 100%;
+    height: 59px;
+    padding:25px 0;
+    img{
+      width: 195px;
+      height: 59px;
+    }
+  }
+  .rightContent{
+    width: 880px;
+    float: right;
+    margin-top:20px;
+    .title{
+      font-size: 28px;
+      font-weight: bold;
+      display: block;
+    }
+    .use{
+      font-size: 16px;
+      margin:20px 0;
+    }
+    .cmp{
+      font-size: 16px;
+      .cmp_title{
+        font-size: 18px;
+        display: block;
+        margin-bottom: 20px;
+        margin-top: 30px;
+      }
+      .cmp_main{
+        padding:30px 15px;
+        width: 100%;
+        box-sizing: border-box;
+        border:1px solid #eeeeee;
+        border-radius: 4px;
+        button{
+          padding:10px 20px;
+          border:1px solid #eeeeee;
+          font-size: 14px;
+          background: white;
+          border-radius: 4px;
+          cursor: pointer;
+          margin:0 10px;
+        }
+        .cmp_par_table{
+          border-collapse: collapse;
+          width: 100%;
+          background-color: #fff;
+          font-size: 14px;
+          line-height: 1.5em;
+          thead{
+            display: table-header-group;
+            vertical-align: middle;
+            border-color: inherit;
+            th{
+              text-align: left;
+              white-space: nowrap;
+              color: #666;
+              font-weight: 400;
+              border-bottom: 1px solid #d8d8d8;
+              padding: 15px;
+              max-width: 250px;
+            }
+          }
+          tbody{
+            td{
+              color: #333;
+              text-align: left;
+              white-space: nowrap;
+              font-weight: 400;
+              border-bottom: 1px solid #d8d8d8;
+              padding: 15px;
+              max-width: 250px;
+            }
+          }
+        }
+      }
+      .cmp_code{
+        width: 100%;
+        box-sizing: border-box;
+        border:1px solid #eeeeee;
+        border-radius: 4px;
+        font-family: Consolas, Inconsolata, Courier, monospace;
+        font-size: 12px;
+        line-height: 20px;
+        color: #000000;
+        margin: 0 0 24px 0;
+        padding: 0 16px;
+        overflow-x: auto;
+        background-color: #f6f8fa;
+      }
+    }
+  }
+}
+
+.clearfix:after{
+  content:'';
+  display:block;
+  clear:both;
+}
+input, button, select, textarea {
+  outline: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+// 生成一系列width
+.widthFn(100);  
+.widthFn(@n, @i: 1) when (@i =< @n) {  
+  .width@{i} {  
+    display: inline-block;
+    width: (@i * 100% / @n);  
+  }  
+  .widthFn(@n, (@i + 1));  
+}
+.center{
+  text-align: center
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar
+{
+  width: 4px;
+  background-color: #ffffff;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track
+{
+  border-radius: 2px;
+  background-color: transparent;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb
+{
+  height: 4px;
+  border-radius: 2px;
+  background-color: #dedfe0;
+}
+
+ul,li{ 
+  padding:0;
+  margin:0;
+  list-style:none
+}
