@@ -15,6 +15,18 @@ import vuePlay from '@/page/vuePlay/vuePlay.vue'
 import vuePlay2 from '@/page/vuePlay/vuePlay2.vue'
 // 玩一下d3
 import d3 from '@/page/d3/d3.vue'
+// 玩一下vuex
+import vuexPlay from '@/page/vuexPlay/vuexPlay4.vue'
+// import importPlay from '@/page/export&import/import.vue'
+// 探究一下vue-router
+// import vueRouterPlay1 from '@/page/vueRouterPlay/vueRouterPlay1.vue'
+// import vueRouterPlay2 from '@/page/vueRouterPlay/vueRouterPlay2.vue'
+const vueRouterPlay1 = () => import('@/page/vueRouterPlay/vueRouterPlay1.vue')
+const vueRouterPlay2 = () => import('@/page/vueRouterPlay/vueRouterPlay2.vue')
+// 探究import和export
+const importPlay = () => import('@/page/export&import/import.vue')
+// d3第二阶段
+const bar = () => import('@/page/d3/bar.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -78,6 +90,45 @@ export default new Router({
       path: '/d3',
       name: 'd3',
       component: d3
+    },
+    {
+      path: '/vuexPlay',
+      name: 'vuexPlay',
+      component: vuexPlay
+    },
+    {
+      path: '/importPlay',
+      name: 'importPlay',
+      component: importPlay
+    },
+    {
+      path: '/vueRouterPlay1',
+      name: 'vueRouterPlay1',
+      component: vueRouterPlay1
+      // beforeEnter: (to, from, next) => {
+      //   console.log('%c 路由独享守卫', 'color:blue')
+      //   console.log(to, from)
+      //   next()
+      // }
+    },
+    {
+      path: '/vueRouterPlay2',
+      name: 'vueRouterPlay2',
+      component: vueRouterPlay2
+    },
+    {
+      path: '/bar',
+      name: 'bar',
+      component: bar
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    console.log(to, from)
+    console.log(savedPosition)
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })

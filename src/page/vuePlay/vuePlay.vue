@@ -1,10 +1,6 @@
 <template>
   <div id="example">
-    <!-- 测试computed计算属性 -->
-    <input  v-model="helloworld"/>
-    <p>{{ hello }}</p>
-    <p>{{ world }}</p>
-    <p>{{ helloworld }}</p>
+    <p v-for ="(item,index) in arr" :key="index">{{ item.name }}</p>
     <button @click="changedata">事件触发</button>
   </div>
 </template>
@@ -12,32 +8,33 @@
 export default {
   data () {
     return {
-      hello: 'hello',
-      world: 'world'
+      arr: [{
+        name: '小明',
+        year: 15
+      }, {
+        name: '小张',
+        year: 16
+      }]
     }
   },
   computed: { // getter，setter计算属性都有
-    helloworld: {
-      // getter
-      get: function () {
-        console.log('getter called')
-        return this.hello + this.world
+
+  },
+  watch: {
+    arr: {
+      handler: function (val, oldVal) {
+        console.log('监听到了arr数据变化')
+        console.log(JSON.stringify(val) === JSON.stringify(oldVal)) // true
       },
-      // setter
-      set: function (newValue) {
-        console.log('setter called , newValue: ' + newValue)
-        this.hello = newValue
-      }
+      deep: true
     }
   },
   methods: {
     changedata () {
-      // this.hello = 'hello~' //并不能触发set
-      this.helloworld = 'hello~world!'
+      this.arr[0].name = '小刘'
     }
   },
   mounted () {
-    console.log(this.$el)
   }
 }
 </script>
