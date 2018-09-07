@@ -7,7 +7,7 @@ import * as d3 from 'd3'
 export default {
   data () {
     return {
-      data: [120, 205, 150, 80, 70, 110, 130],
+      data: [120, 215, 150, 80, 70, 110, 130],
       width: '',
       height: '',
       padding: {
@@ -126,18 +126,31 @@ export default {
       .attr('class', 'shadow')
       .attr('zIndex', '-1')
       .attr('width', xScale.bandwidth() - paddingInner * 2)
-      // height取0,是为了后面过渡动画
       .attr('height', function (d) {
         return yScale(0) // max - d是为了取反
       })
       .attr('x', function (d, i) {
         return padLeft + xScale(_this.xAxis.data[i]) + paddingInner
       })
-      // y取x轴位置是为了后面过渡动画
       .attr('y', function (d, i) {
         return padTop
       })
       .attr('fill', '#f0f0f0')
+    // 创建y轴网线,网线的层级比背景要高，比柱状图要低
+    let yInners = d3.scaleLinear().domain([0, max]).range([height - padTop - padBottom, minHeight]).ticks()
+    let grid = svg.selectAll('.grid')
+      .data(yInners)
+      .enter().append('g')
+      .attr('transform', 'translate(' + padLeft + ',' + padTop + ')')
+    grid.append('line')
+      .attr('x1', paddingInner)
+      .attr('x2', width - padLeft - padRight - paddingInner)
+      .attr('y1', function (d) { return yScale(d) })
+      .attr('y2', function (d) { return yScale(d) })
+      .attr('stroke', 'rgba(0,0,0,0.2)')
+      .attr('stroke-width', '1')
+      // 设置虚线
+      .attr('stroke-dasharray', '4,4')
     // 添加渐变 定义一个线性渐变
     let defs = svg.append('defs')
     let linearGradient = defs.append('linearGradient')
@@ -256,7 +269,7 @@ export default {
 #bar{
   width: 600px;
   height: 600px;
-  margin: 90px 80px;
+  margin: 20px 20px;
   padding: 15px 25px;
   border:1px solid #cccccc;
   position: relative;
