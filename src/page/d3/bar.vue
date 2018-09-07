@@ -199,7 +199,10 @@ export default {
         let mouseX = d3.event.clientX + 15
         let mouseY = d3.event.clientY - 15
         // 如果你的style用了scoped，那你的样式应该写到App.vue中去，否则插入元素的样式不会生效
-        toolTips.html(`<div class="tolTp">${d}</div>`)
+        toolTips.html(`<div class="tolTp">
+            <div class="border"></div>
+            <span>数值：${d}</span>
+          </div>`)
           .style('opacity', 1)
           .style('left', mouseX + 'px')
           .style('top', mouseY + 'px')
@@ -262,5 +265,18 @@ export default {
   padding:8px 12px;
   background: rgba(0, 0, 0, 0.7);
   color:white;
+  height: 20px;
+  .border{
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: #83bff6;
+    float: left;
+    margin:7px 8px 7px 0;
+  }
+  span{
+    float: left;
+    line-height: 20px;
+  }
 }
 </style>
