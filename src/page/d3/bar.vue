@@ -27,7 +27,11 @@ export default {
         type: 'easeBounceOut', // d3.easeLinear 等等
         duration: 2000
       },
-      color: ''
+      color: '',
+      title: {
+        show: true,
+        content: '普通柱状图实例'
+      }
     }
   },
   methods: {
@@ -70,7 +74,21 @@ export default {
       .append('svg')
       .attr('width', width)
       .attr('height', height)
-    console.log(svg)
+    // 先绘制标题，由于标题要占位置，所以增加padTop值
+    padTop += 50
+    svg.append('text')
+      .attr('class', 'titles')
+      .text(this.title.content)
+      .attr('y', padTop - 50)
+      .attr('dy', '1em')
+      // 标题居中
+      // .attr('x', (width - padLeft - padRight) / 2)
+      // .attr('dx', -this.title.content.toString().length / 2 + 'em')
+      // 标题居左
+      .attr('x', 0)
+      .style('font-family', 'SimHei')
+      .style('font-size', '22px')
+
     // 计算值的最大值
     let max = d3.max(this.data)
     // 创建一个线性比例尺
@@ -78,6 +96,10 @@ export default {
     // linearScale.tickFormat - 将刻度格式化为人类友好的格式.
     // linearScale.nice - 将输入范围扩展到漂亮的整数.
     let yScale = d3.scaleLinear().domain([0, max]).range([height - padTop - padBottom, minHeight]).nice()
+    // 注意这里有个小细节,我重新设置了max的值
+    // [120, 205, 150, 80, 70, 110, 130] yScale.domain(0,205).nice()
+    // console.log(yScale.domain()) [0,220] 所以这里要更新下max的值
+    max = yScale.domain()[1]
     // 创建y轴
     let yAxis = d3.axisLeft().scale(yScale)
     svg.append('g')
@@ -96,11 +118,46 @@ export default {
     svg.append('g')
       .attr('transform', 'translate(' + padLeft + ',' + (height - padBottom) + ')')
       .call(xAxis)
-    // 添加柱状图
-    let bar = svg.selectAll('rect')
+    // 由于层级问题,只能先渲染阴影,因为阴影层级较低
+    svg.selectAll('.shadow')
       .data(this.data)
       .enter()
       .append('rect')
+      .attr('class', 'shadow')
+      .attr('zIndex', '-1')
+      .attr('width', xScale.bandwidth() - paddingInner * 2)
+      // height取0,是为了后面过渡动画
+      .attr('height', function (d) {
+        return yScale(0) // max - d是为了取反
+      })
+      .attr('x', function (d, i) {
+        return padLeft + xScale(_this.xAxis.data[i]) + paddingInner
+      })
+      // y取x轴位置是为了后面过渡动画
+      .attr('y', function (d, i) {
+        return padTop
+      })
+      .attr('fill', '#f0f0f0')
+    // 添加渐变 定义一个线性渐变
+    let defs = svg.append('defs')
+    let linearGradient = defs.append('linearGradient')
+      .attr('id', 'linearColor')
+      .attr('x1', '0%')
+      .attr('y1', '0%')
+      .attr('x2', '100%')
+      .attr('y2', '100%')
+    linearGradient.append('stop')
+      .attr('offset', '0%')
+      .style('stop-color', '#83bff6')
+    linearGradient.append('stop')
+      .attr('offset', '100%')
+      .style('stop-color', '#188df0')
+    // 添加柱状图
+    let bar = svg.selectAll('.main')
+      .data(this.data)
+      .enter()
+      .append('rect')
+      .attr('class', 'main')
       .attr('width', xScale.bandwidth() - paddingInner * 2)
       // height取0,是为了后面过渡动画
       .attr('height', function (d) {
@@ -113,7 +170,8 @@ export default {
       .attr('y', function (d, i) {
         return height - padBottom
       })
-      .attr('fill', 'steelblue')
+      .style('fill', 'url(#' + linearGradient.attr('id') + ')')
+
     // 柱状图过渡动画
     bar.transition()
       .duration(this.transition.duration)
@@ -124,9 +182,11 @@ export default {
       .attr('height', function (d) {
         return yScale(max - d) // max - d是为了取反
       })
-    // toolTips
-    let toolTips = svg.append('text')
-      .attr('class', 'tooltips')
+    // toolTips提示
+    let toolTips = d3.select('body').append('div')
+      .attr('class', 'toolTips')
+      .style('opacity', 0)
+      .style('position', 'absolute')
     // 柱状图交互
     bar.on('mouseover', function (d, i) {
       d3.select(this)
@@ -135,15 +195,18 @@ export default {
         .attr('opacity', '0.8')
     })
       .on('mousemove', function (d) {
-        console.log(d3.event)
-        let mouseX = d3.event.offsetX + 10
-        let mouseY = d3.event.offsetY - 10
-        toolTips.text(d)
-          .attr('x', mouseX)
-          .attr('y', mouseY)
+        // 这里取得是相对屏幕的坐标，因为tooltip元素放在body中
+        let mouseX = d3.event.clientX + 15
+        let mouseY = d3.event.clientY - 15
+        // 如果你的style用了scoped，那你的样式应该写到App.vue中去，否则插入元素的样式不会生效
+        toolTips.html(`<div class="tolTp">${d}</div>`)
+          .style('opacity', 1)
+          .style('left', mouseX + 'px')
+          .style('top', mouseY + 'px')
       })
       .on('mouseout', function (d, i) {
-        toolTips.text('')
+        toolTips.style('opacity', 0)
+        toolTips.html('')
         d3.select(this)
           .transition()
           .duration(500)
@@ -171,11 +234,11 @@ export default {
       })
       // 设置x偏移
       .attr('dx', function (d, i) {
-        // 这里由于文字本身有长度,向左移动一半文字长度即可
+        // 这里由于文字本身有长度,向左移动一半文字长度即可,事实上数字站得位置只有文字一半，因此我除以4，而不是除以2
         // 先转成字符串再计算
         return -d.toString().length / 4 + 'em'
       })
-      .attr('fill', 'black')
+      .attr('fill', 'yellow')
       .transition()
       .duration(this.transition.duration)
       .ease(d3[this.transition.type])
@@ -186,12 +249,18 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 #bar{
   width: 600px;
   height: 600px;
-  margin: 20px 10px;
+  margin: 90px 80px;
   padding: 15px 25px;
-  border:1px solid #cccccc
+  border:1px solid #cccccc;
+  position: relative;
+}
+.tolTp{
+  padding:8px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color:white;
 }
 </style>
