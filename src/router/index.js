@@ -27,6 +27,7 @@ const vueRouterPlay2 = () => import('@/page/vueRouterPlay/vueRouterPlay2.vue')
 const importPlay = () => import('@/page/export&import/import.vue')
 // d3第二阶段
 const bar = () => import('@/page/d3/bar.vue')
+const groupBar = () => import('@/page/d3/groupBar.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -120,6 +121,10 @@ export default new Router({
       path: '/bar',
       name: 'bar',
       component: bar
+    }, {
+      path: '/groupBar',
+      name: 'groupBar',
+      component: groupBar
     }
   ],
   scrollBehavior (to, from, savedPosition) {
