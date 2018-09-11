@@ -28,6 +28,7 @@ const importPlay = () => import('@/page/export&import/import.vue')
 // d3第二阶段
 const bar = () => import('@/page/d3/bar.vue')
 const groupBar = () => import('@/page/d3/groupBar.vue')
+const pie = () => import('@/page/d3/pie.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -125,6 +126,10 @@ export default new Router({
       path: '/groupBar',
       name: 'groupBar',
       component: groupBar
+    }, {
+      path: '/pie',
+      name: 'pie',
+      component: pie
     }
   ],
   scrollBehavior (to, from, savedPosition) {

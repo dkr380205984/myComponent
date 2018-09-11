@@ -157,7 +157,7 @@ export default {
       .attr('id', 'linearColor')
       .attr('x1', '0%')
       .attr('y1', '0%')
-      .attr('x2', '100%')
+      .attr('x2', '0%')
       .attr('y2', '100%')
     linearGradient.append('stop')
       .attr('offset', '0%')
