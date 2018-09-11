@@ -94,9 +94,6 @@ export default {
     let arc = d3.arc()
       .innerRadius(100) // 设置环的内半径,为0的时候则是圆
       .outerRadius(outerRadius / 2.8) // 设置环的外半径,用计算得到的最大值除以>2的值
-    // 创建一组线性渐变的颜色数组
-    svg.selectAll('.defs')
-      .data()
     // 用创建的弧生成器和已经通过pie方法得到数据绘制路径
     // 第一步，创建弧的container
     let path = svg.selectAll('.arcs')
