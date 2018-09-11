@@ -1,6 +1,6 @@
 # play
 
-> A Vue.js project
+> 个人组件库，d3系列在/page/d3文件夹中，对前端感兴趣的可以加我QQ380205984，965在线，其他时间歇息，不营业
 
 ## Build Setup
 
