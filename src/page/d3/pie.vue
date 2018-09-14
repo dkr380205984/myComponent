@@ -1,5 +1,7 @@
 <template>
-  <div id="pie"></div>
+  <div id="pie">
+    <button class="button" @click="changeData">点击触发数据更新</button>
+  </div>
 </template>
 
 <script>
@@ -21,10 +23,10 @@ export default {
         value: 40.8
       }, {
         name: '苹果',
-        value: 90.8
+        value: 70.8
       }, {
         name: '其他',
-        value: 100.8
+        value: 10.8
       } ],
       width: '',
       heigth: '',
@@ -57,6 +59,77 @@ export default {
         }
       }
       return newObj
+    },
+    changeData () {
+      let _this = this
+      let randomData = [{
+        name: '小米',
+        value: parseInt(Math.random() * 100)
+      }, {
+        name: '华为',
+        value: parseInt(Math.random() * 100)
+      }, {
+        name: '联想',
+        value: parseInt(Math.random() * 100)
+      }, {
+        name: '三星',
+        value: parseInt(Math.random() * 100)
+      }, {
+        name: '苹果',
+        value: parseInt(Math.random() * 100)
+      }, {
+        name: '其他',
+        value: parseInt(Math.random() * 100)
+      } ]
+      let pie = d3.pie()
+      // 这里我特地设置了数据不需要排序，因为在数据更新的时候，由于不能确定每个数值的排序位置，他取到的颜色数组会发生改变，这样就实现不了平滑过渡
+        .sort(null)
+        .value((d) => d.value)(randomData)
+      let arcs = d3.selectAll('.arcs').data(pie)
+      let path = arcs.selectAll('path').data((d) => {
+        let arr = []
+        for (let i = 0; i < 100; i++) {
+          let copy = _this.deepClone(d)
+          copy.endAngle = copy.endAngle - 1 / 360 * Math.PI // 如果你不希望你的圆环看起来像一个光盘，你可以这么处理，给每段弧留个起始空隙
+          copy.startAngle = copy.startAngle + 1 / 360 * Math.PI
+          let delt = (copy.endAngle - copy.startAngle) / 100
+          copy.startAngle = copy.startAngle + delt * i
+          copy.endAngle = copy.startAngle + delt
+          arr.push(copy)
+        }
+        return arr
+      })
+      path.transition()
+        .duration(1000)
+        // 如果直接使用attr('d')的过渡方式会出现不能平滑过渡的情况
+        // .attr('d', function (d) {
+        //   return arc(d)
+        // })
+        .attrTween('d', function (d, i) {
+          // 这个函数要拿到原来的角度和新的角度，传给过渡函数
+          // 原来的数据要拿到，只能再求一次，当然你也可以保留元数据，求得新的数据，这都无关紧要
+          let pie = d3.pie()
+            .sort(null)
+            .value((d) => d.value)(_this.data)
+          let copy = _this.deepClone(pie[d.index])
+          copy.endAngle = copy.endAngle - 1 / 360 * Math.PI
+          copy.startAngle = copy.startAngle + 1 / 360 * Math.PI
+          let delt = (copy.endAngle - copy.startAngle) / 100
+          copy.startAngle = copy.startAngle + delt * i
+          copy.endAngle = copy.startAngle + delt
+          let arc = d3.arc()
+            .innerRadius(120) // 设置环的内半径,为0的时候则是圆
+            .outerRadius(535 / 2.8) // 设置环的外半径,用计算得到的最大值除以>2的值
+          // 设置过渡函数的起始角度分别为旧的和新的
+          let interpolate = d3.interpolate({startAngle: copy.startAngle, endAngle: copy.endAngle}, {startAngle: d.startAngle, endAngle: d.endAngle})
+          return function (t) {
+            return arc(interpolate(t))
+          }
+        })
+      // 完成动画之后把数据更新成change后的，用setTimeout管理异步操作很蠢，后面封装的时候用pormise
+      setTimeout(function () {
+        _this.data = randomData
+      }, 1000)
     }
   },
   mounted: function () {
@@ -88,6 +161,7 @@ export default {
       .attr('height', height)
     // 用d3提供的API将一组表格数据转换成生成饼图或者环形图需要的数据
     let pie = d3.pie()
+      .sort(null)
       .value((d) => d.value)(_this.data)
     // 先绘制一下图例
     padTop += 40 // 先预留40像素的高度放图例
@@ -133,7 +207,7 @@ export default {
       .attr('transform', 'translate(' + (padLeft + (width - padLeft - padRight) / 2) + ',' + (padTop + (height - padTop - padBottom) / 2) + ')')
     // 第二步，将每个弧分很多段，实现渐变效果
     path.selectAll('path')
-    // 这里我将原来的数据的起始角度拆分成100份，返回一个新的数组
+    // 这里我将原来的数据的起始角度拆分成10份，返回一个新的数组
       .data((d, i) => {
         let arr = []
         for (let i = 0; i < 100; i++) {
@@ -152,7 +226,7 @@ export default {
       .transition()
       .delay(function (d, i) {
         // return i * 15 // 这种动画比较容易想到，但看起来似乎没有后面一种好看，可以试试，比较传统
-        return (i + (d.index * 100)) * 10 // 这里的动画处理是重点，每一段弧的起始时间需要加上d.index*100，才能实现环环相扣的动画效果
+        return (i + (d.index * 100)) * 2 // 这里的动画处理是重点，每一段弧的起始时间需要加上d.index*10，才能实现环环相扣的动画效果
       })
       .attr('fill', function (d, i) {
         // 创建一个线性比例尺
@@ -280,6 +354,19 @@ export default {
 </script>
 
 <style lang="less">
+.button{
+  position: absolute;
+  bottom: -40px;
+  left:-1px;
+  border:1px solid #cccccc;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover{
+    color: yellowgreen;
+  }
+}
 #pie{
   width: 600px;
   height: 600px;
