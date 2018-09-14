@@ -29,6 +29,7 @@ const importPlay = () => import('@/page/export&import/import.vue')
 const bar = () => import('@/page/d3/bar.vue')
 const groupBar = () => import('@/page/d3/groupBar.vue')
 const pie = () => import('@/page/d3/pie.vue')
+const rosePie = () => import('@/page/d3/rosePie.vue')
 
 Vue.use(Router)
 export default new Router({
@@ -130,6 +131,10 @@ export default new Router({
       path: '/pie',
       name: 'pie',
       component: pie
+    }, {
+      path: '/rosePie',
+      name: 'rosePie',
+      component: rosePie
     }
   ],
   scrollBehavior (to, from, savedPosition) {
