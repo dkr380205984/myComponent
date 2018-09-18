@@ -31,6 +31,7 @@ const groupBar = () => import('@/page/d3/groupBar.vue')
 const pie = () => import('@/page/d3/pie.vue')
 const rosePie = () => import('@/page/d3/rosePie.vue')
 const line = () => import('@/page/d3/line.vue')
+const area = () => import('@/page/d3/area.vue')
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -139,6 +140,10 @@ export default new Router({
       path: '/line',
       name: 'line',
       component: line
+    }, {
+      path: '/area',
+      name: 'area',
+      component: area
     }
   ],
   scrollBehavior (to, from, savedPosition) {
