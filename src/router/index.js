@@ -32,6 +32,10 @@ const pie = () => import('@/page/d3/pie.vue')
 const rosePie = () => import('@/page/d3/rosePie.vue')
 const line = () => import('@/page/d3/line.vue')
 const area = () => import('@/page/d3/area.vue')
+// 自己尝试模拟词云
+const wordCloud = () => import('@/page/wordCloud/wordCloud.vue')
+// win10拖拽菜单制作
+const drag = () => import('@/page/drag/drag.vue')
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -144,6 +148,16 @@ export default new Router({
       path: '/area',
       name: 'area',
       component: area
+    },
+    {
+      path: '/wordCloud',
+      name: 'wordCloud',
+      component: wordCloud
+    },
+    {
+      path: '/drag',
+      name: 'drag',
+      component: drag
     }
   ],
   scrollBehavior (to, from, savedPosition) {
